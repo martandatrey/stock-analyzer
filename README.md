@@ -187,7 +187,7 @@ With `run.py`, stage work uses `claude-sonnet-5-5` and the research and portfoli
 ### Reading the reports
 Serve the folder locally and browse:
 ```bash
-python3 -m http.server 8765 --directory reports
+python3 -m http.server 8765 --bind 127.0.0.1 --directory reports
 ```
 Then open <http://localhost:8765/>. The files also open directly in a browser. Each report has:
 - the decision and its levels
