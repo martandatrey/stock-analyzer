@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock reports {{ run_date }}</title>
+{% include "_style.html.j2" %}
+<style>
+.wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 18px; }
+.row-sum { color: var(--ink-2); font-size: 13px; margin-top: 2px; max-width: 46ch; }
+td a.t { font-weight: 650; text-decoration: none; }
+td a.t:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .wrap { padding: 16px; }
+  .hide-sm { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="muted small">Stock Analyzer · {{ weekday }}</div>
+  <h1>Reports for {{ run_date }}</h1>
+  <div class="counts">
+    {% for r in ["Buy", "Overweight", "Hold", "Underweight", "Sell", "REVIEW", "Incomplete"] %}
+      {% set n = rows | selectattr("rating", "equalto", r) | list | length %}
+      {% if n %}<span class="badge {{ (rows | selectattr('rating', 'equalto', r) | first).rating_class }}">{{ r }} · {{ n }}</span>{% endif %}
+    {% endfor %}
+  </div>
+  <div class="card table-wrap">
+  {% if rows %}
+  <table>
+    <tr><th>Stock</th><th>Rating</th><th>Action</th><th class="hide-sm">Conf.</th><th class="hide-sm">Composite</th><th>Price</th><th class="hide-sm">1M</th><th class="hide-sm">Horizon</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{% if r.href %}<a class="t" href="{{ r.href }}">{{ r.ticker }}</a>{% else %}<b>{{ r.ticker }}</b>{% endif %}
+        <span class="muted small">{{ r.exchange }}</span>
+        <div class="row-sum">{{ r.company }}{% if r.summary %}<span class="hide-sm">: {{ r.summary }}</span>{% endif %}</div></td>
+      <td><span class="badge {{ r.rating_class }}">{{ r.rating }}</span></td>
+      <td>{{ r.action }}<div class="muted small">{{ r.status }}</div></td>
+      <td class="num hide-sm">{{ r.confidence if r.confidence is not none else "–" }}</td>
+      <td class="num hide-sm">{{ r.composite if r.composite is not none else "–" }}</td>
+      <td class="num">{{ r.price | num }} <span class="muted small">{{ r.currency }}</span><div class="muted small">close {{ r.data_as_of }}</div></td>
+      <td class="num hide-sm">{{ r.ret_1m | pct }}</td>
+      <td class="hide-sm">{{ r.horizon }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No stocks were analysed on this date.</p>{% endif %}
+  </div>
+  <p class="disclaimer">Generated {{ generated }}. AI-generated research for information only; not investment advice.</p>
+</div>
+</body>
+</html>

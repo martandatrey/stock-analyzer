@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/python scripts/:*)",
+      "Bash(.venv/bin/python run.py:*)",
+      "Bash(.venv/bin/python -m pytest:*)",
+      "Read(./**)",
+      "Write(./reports/**)",
+      "Edit(./reports/**)",
+      "WebSearch"
+    ],
+    "deny": [
+      "mcp__kite__place_order",
+      "mcp__kite__modify_order",
+      "mcp__kite__cancel_order",
+      "mcp__kite__place_gtt_order",
+      "mcp__kite__modify_gtt_order",
+      "mcp__kite__delete_gtt_order"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/block_trading.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

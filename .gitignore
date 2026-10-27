@@ -1,0 +1,22 @@
+# Personal data: each user keeps their own
+stocks.xlsx
+~$*.xlsx
+reports/
+.cache/
+.env
+
+# Environments and fetched third-party code (setup.sh recreates them)
+.venv/
+.venv-ta/
+vendor/
+
+# Claude Code per-user approvals
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS
+.DS_Store
