@@ -32,3 +32,10 @@ def test_stages_by_depth():
     assert quick == [f"analysts/{a}" for a in config.ANALYSTS] + ["final/portfolio_manager"]
     assert "debate/bull@1" in std and "debate/bull@2" not in std and "personas/buffett" in std
     assert "debate/bear@2" in deep and "risk/neutral" in deep and deep[-1] == "final/portfolio_manager"
+
+
+def test_venv_python_per_os(monkeypatch):
+    monkeypatch.setattr(config, "IS_WINDOWS", True)
+    assert config.venv_python(".venv-ta").as_posix().endswith(".venv-ta/Scripts/python.exe")
+    monkeypatch.setattr(config, "IS_WINDOWS", False)
+    assert config.venv_python().as_posix().endswith(".venv/bin/python")

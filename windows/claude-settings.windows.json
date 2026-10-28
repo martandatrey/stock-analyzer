@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python.exe scripts/:*)",
+      "Bash(.venv/Scripts/python.exe run.py:*)",
+      "Bash(.venv/Scripts/python.exe -m pytest:*)",
+      "PowerShell(.venv/Scripts/python.exe scripts/*)",
+      "PowerShell(.venv/Scripts/python.exe run.py*)",
+      "PowerShell(.venv/Scripts/python.exe -m pytest*)",
+      "PowerShell(.venv\\Scripts\\python.exe scripts\\*)",
+      "PowerShell(.venv\\Scripts\\python.exe run.py*)"
+    ]
+  }
+}

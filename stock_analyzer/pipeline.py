@@ -154,7 +154,7 @@ def finalize(run: RunFolder, book_path=config.WORKBOOK) -> dict:
         abstain(run, "final/portfolio_manager", "No portfolio manager output was produced.")
     second = second_opinion.load(run)
     html_path = report.render(run, second)
-    href = str(html_path.relative_to(config.ROOT))
+    href = html_path.relative_to(config.ROOT).as_posix()
     stock = run.stock
     row = stock["row"]
     d = decision(run)

@@ -192,7 +192,7 @@ def report_context(run: RunFolder, second: dict | None) -> dict:
 def render(run: RunFolder, second: dict | None = None) -> Path:
     html = _env.get_template("report.html.j2").render(**report_context(run, second))
     out = run.dir / "report.html"
-    out.write_text(html)
+    out.write_text(html, encoding="utf-8")
     return out
 
 
@@ -226,5 +226,5 @@ def build_index(run_date: str, root: Path = config.REPORTS_DIR) -> Path:
         run_date=run_date, rows=rows, generated=datetime.now().strftime("%Y-%m-%d %H:%M"),
         weekday=date.fromisoformat(run_date).strftime("%A"))
     out = day / "index.html"
-    out.write_text(html)
+    out.write_text(html, encoding="utf-8")
     return out

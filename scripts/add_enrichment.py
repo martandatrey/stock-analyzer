@@ -22,7 +22,7 @@ def main():
     g.add_argument("--file")
     g.add_argument("--text")
     args = ap.parse_args()
-    text = Path(args.file).read_text() if args.file else args.text
+    text = Path(args.file).read_text(encoding="utf-8") if args.file else args.text
     run = RunFolder.at(Path(args.dir))
     data = run.data
     existing = data.get("enrichment") or ""

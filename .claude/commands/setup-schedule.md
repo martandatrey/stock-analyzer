@@ -9,7 +9,9 @@ Arguments: `$ARGUMENTS`
 
 This creates two **local** scheduled tasks in the Claude desktop app. They have to be local, not cloud routines, because they read `stocks.xlsx` and write reports on this computer.
 
-1. **Find this project's absolute path.** Run `pwd`. Call it PROJECT.
+**Windows:** wherever this file says `.venv/bin/python`, use `.venv/Scripts/python.exe` instead. Keep the forward slashes; that form works in both PowerShell and Git Bash and matches the pre-approved rules.
+
+1. **Find this project's absolute path.** Run `pwd` (on Windows PowerShell: `(Get-Location).Path`). Call it PROJECT.
 
 2. **Work out the times.**
    - With no arguments: `.venv/bin/python scripts/schedule_times.py`

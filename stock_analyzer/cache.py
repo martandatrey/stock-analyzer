@@ -24,10 +24,10 @@ def get(k: str) -> dict | None:
     p = DIR / f"{k}.json"
     if not p.exists():
         return None
-    rec = json.loads(p.read_text())
+    rec = json.loads(p.read_text(encoding="utf-8"))
     return rec if "parsed" in rec else None
 
 
 def put(k: str, record: dict) -> None:
     DIR.mkdir(parents=True, exist_ok=True)
-    (DIR / f"{k}.json").write_text(json.dumps(record, indent=2, ensure_ascii=False, default=str))
+    (DIR / f"{k}.json").write_text(json.dumps(record, indent=2, ensure_ascii=False, default=str), encoding="utf-8")

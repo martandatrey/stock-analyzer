@@ -1,6 +1,7 @@
 """Offline health check run at the end of setup.sh: imports, workbook, prompt files, hook, optional parts."""
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -42,10 +43,25 @@ def prompt_files():
     return f"{len(stages) + 1} templates"
 
 
+def find_sh() -> str | None:
+    """sh on PATH, or the one that ships with Git for Windows (Claude Code runs hooks with Git Bash there)."""
+    if sh := shutil.which("sh"):
+        return sh
+    if git := shutil.which("git"):
+        base = Path(git).resolve().parent.parent  # ...\Git\cmd\git.exe -> ...\Git
+        for cand in (base / "bin" / "sh.exe", base / "usr" / "bin" / "sh.exe"):
+            if cand.exists():
+                return str(cand)
+    return None
+
+
 def hook():
-    script = config.ROOT / ".claude" / "hooks" / "block_trading.py"
-    out = subprocess.run([sys.executable, str(script)], input=json.dumps({"tool_name": "mcp__kite__place_order"}),
-                         capture_output=True, text=True).stdout
+    sh = find_sh()
+    if sh is None:
+        raise RuntimeError("sh not found. On Windows install Git for Windows (winget install Git.Git)")
+    script = config.ROOT / ".claude" / "hooks" / "block_trading.sh"
+    event = json.dumps({"tool_name": "mcp__kite__place_order", "tool_input": {}})
+    out = subprocess.run([sh, str(script)], input=event, capture_output=True, text=True).stdout
     if "deny" not in out:
         raise RuntimeError("trading-block hook did not block place_order")
     return "blocks broker order tools"

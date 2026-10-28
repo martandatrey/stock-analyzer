@@ -20,3 +20,6 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Claude desktop scheduler runtime lock
+.claude/scheduled_tasks.lock

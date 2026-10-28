@@ -299,9 +299,9 @@ def fill(run: RunFolder, stage: str, extra: dict | None = None) -> tuple[str, st
     ctx = {} if stage.startswith("memory/") else context(run, stage)
     ctx.update(extra or {})
     ctx.setdefault("output_schema", schemas.prompt_text(stage))
-    system = render((config.PROMPTS_DIR / "system.md").read_text(), ctx)
-    user = render(template_path(stage).read_text(), ctx)
+    system = render((config.PROMPTS_DIR / "system.md").read_text(encoding="utf-8"), ctx)
+    user = render(template_path(stage).read_text(encoding="utf-8"), ctx)
     path = run.prompt_path(stage)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(f"<!-- system prompt: prompts/system.md -->\n{system}\n\n---\n\n{user}\n")
+    path.write_text(f"<!-- system prompt: prompts/system.md -->\n{system}\n\n---\n\n{user}\n", encoding="utf-8")
     return system, user

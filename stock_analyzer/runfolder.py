@@ -37,12 +37,12 @@ class RunFolder:
         p = self.dir / name
         if not p.exists():
             raise FileNotFoundError(f"{p} is missing. Run scripts/fetch_snapshot.py for this stock first.")
-        return json.loads(p.read_text())
+        return json.loads(p.read_text(encoding="utf-8"))
 
     def _write(self, name: str, obj) -> Path:
         p = self.dir / name
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(json.dumps(obj, indent=2, ensure_ascii=False, default=str))
+        p.write_text(json.dumps(obj, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
         return p
 
     @property
@@ -70,7 +70,7 @@ class RunFolder:
 
     def output(self, stage: str) -> dict | None:
         p = self.output_path(stage)
-        return json.loads(p.read_text()) if p.exists() else None
+        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
 
     def outputs(self) -> dict[str, dict]:
         """Every stage output present, keyed by stage name, in stage order."""

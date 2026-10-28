@@ -31,7 +31,7 @@ def main():
         if not path.exists():
             sys.exit(f"{path} does not exist; write the stage's JSON there first.")
         try:
-            obj = json.loads(path.read_text())
+            obj = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             sys.exit(f"{path} is not valid JSON: {exc}")
         try:

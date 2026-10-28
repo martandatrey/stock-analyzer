@@ -6,6 +6,7 @@ stocks.xlsx; this module holds the defaults and the fixed mappings.
 
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -16,7 +17,12 @@ PROMPTS_DIR = ROOT / "prompts"
 TEMPLATES_DIR = ROOT / "templates"
 REPORTS_DIR = ROOT / "reports"
 CACHE_DIR = ROOT / ".cache"
-TA_BIN = ROOT / ".venv-ta" / "bin" / "tradingagents"
+IS_WINDOWS = sys.platform == "win32"
+
+
+def venv_python(venv: str = ".venv") -> Path:
+    """The Python inside one of the project's virtualenvs: bin/python on macOS/Linux, Scripts\\python.exe on Windows."""
+    return ROOT / venv / ("Scripts/python.exe" if IS_WINDOWS else "bin/python")
 
 
 @dataclass(frozen=True)

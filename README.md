@@ -57,7 +57,7 @@ For every stock row in `stocks.xlsx` it:
 
 | Need | Why |
 |---|---|
-| **macOS or Linux** (Windows: use WSL) | `setup.sh` is a bash script |
+| **macOS, Linux or Windows 10/11** | Mac/Linux use `setup.sh` (below). **Windows has its own scripts and steps: [windows/README.md](windows/README.md)** |
 | **Python 3.11+** or [uv](https://docs.astral.sh/uv/) | uv is recommended: `setup.sh` uses it to fetch a matching Python automatically |
 | **git** | to clone this repo and fetch TradingAgents |
 | **Claude desktop app or Claude Code CLI** | for `/analyze-stocks` and the daily schedule |
@@ -70,6 +70,8 @@ Connectors are added in claude.ai → Settings → Connectors. Each person conne
 ---
 
 ## 3. Quick start
+
+> **On Windows?** Follow [windows/README.md](windows/README.md) instead; it has the same steps with PowerShell commands.
 
 **1. Get the code.**
 ```bash
@@ -295,7 +297,8 @@ templates/                   report HTML templates and the empty workbook templa
 run.py                       standalone front end
 .claude/commands/            /analyze-stocks, /setup-schedule
 .claude/agents/              stock-analyst, bull-researcher, bear-researcher, portfolio-manager
-.claude/hooks/               block_trading.py
+.claude/hooks/               block_trading.sh (POSIX sh: runs under macOS/Linux sh and Git Bash on Windows)
+windows/                     Windows versions: setup.ps1, run.ps1, schedule.ps1, open-reports.ps1, permission rules, README
 .claude/settings.json        pre-approved commands + the trading-block hook
 reports/                     your reports (not shared)
 vendor/                      TradingAgents and ai-hedge-fund (fetched by setup.sh, not shared)
@@ -306,7 +309,7 @@ tests/                       pytest suite
 
 ## 11. Safety
 
-- **No trading.** `.claude/hooks/block_trading.py` runs before every connector tool call. It refuses anything that looks like placing, modifying or cancelling an order (`place_order`, `modify_gtt_order` and so on) on any broker connector, whatever it's called. `.claude/settings.json` also denies the Kite order tools by name. Test it with `.venv/bin/python -m pytest tests/test_hook.py`.
+- **No trading.** `.claude/hooks/block_trading.sh` runs before every connector tool call. It refuses anything that looks like placing, modifying or cancelling an order (`place_order`, `modify_gtt_order` and so on) on any broker connector, whatever it's called. `.claude/settings.json` also denies the Kite order tools by name. Test it with `.venv/bin/python -m pytest tests/test_hook.py`.
 - **Least privilege.** The committed settings only pre-approve this project's own scripts, reading the project, writing under `reports/`, and web search.
 - **Your data stays local.** `stocks.xlsx`, reports, `.env` and connector approvals are git-ignored.
 - **Untrusted text.** News headlines and AI output are escaped in the reports, never rendered as HTML.

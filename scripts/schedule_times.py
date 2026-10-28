@@ -21,6 +21,12 @@ CRON_DAYS = {0: 1, 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 0}  # python weekday -> cron
 
 def local_zone():
     try:
+        from tzlocal import get_localzone  # works on Windows, macOS and Linux
+
+        return get_localzone()
+    except Exception:
+        pass
+    try:
         link = subprocess.run(["readlink", "/etc/localtime"], capture_output=True, text=True).stdout.strip()
         if "zoneinfo/" in link:
             return ZoneInfo(link.split("zoneinfo/")[1])

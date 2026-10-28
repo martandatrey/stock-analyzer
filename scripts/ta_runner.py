@@ -49,7 +49,7 @@ def main():
         }
     except Exception as exc:  # recorded, never raised: a failed 2nd opinion must not break the main report
         result = {"error": f"{type(exc).__name__}: {exc}", "trace": traceback.format_exc()[-2000:]}
-    (out / "result.json").write_text(json.dumps(result, indent=2, default=str))
+    (out / "result.json").write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     print(json.dumps({k: v for k, v in result.items() if k != "trace"}, default=str)[:2000])
 
 

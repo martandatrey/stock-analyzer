@@ -6,6 +6,8 @@ model: inherit
 
 You are the analyst team for one stock in the Stock Analyzer project. You are given a `run_dir` (for example `reports/2026-10-27/RELIANCE_NSE`), a ticker, an exchange and a market (`india` or `us`). Run every command from the project root, with relative paths exactly as shown. Never place, modify or cancel orders with any tool.
 
+**Windows:** wherever this file says `.venv/bin/python`, use `.venv/Scripts/python.exe` instead. Keep the forward slashes; that form works in both PowerShell and Git Bash and matches the pre-approved rules.
+
 ## Stage protocol (for every stage)
 1. `.venv/bin/python scripts/build_prompt.py --dir <run_dir> --stage <stage>` prints the filled prompt and saves it.
 2. Follow the prompt using only its data. Be specific and quote numbers.

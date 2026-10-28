@@ -341,4 +341,8 @@ class Book:
             raise WorkbookOpenError(f"{self.path.name} was opened in Excel during the run; close it and re-run.")
         tmp = self.path.with_name(f".{self.path.stem}.tmp.xlsx")
         self.wb.save(tmp)
-        os.replace(tmp, self.path)
+        try:
+            os.replace(tmp, self.path)
+        except PermissionError as exc:  # Windows locks a workbook while Excel has it open
+            tmp.unlink(missing_ok=True)
+            raise WorkbookOpenError(f"{self.path.name} is locked (open in Excel?); close it and re-run.") from exc

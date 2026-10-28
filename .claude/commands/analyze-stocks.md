@@ -9,6 +9,8 @@ Arguments: `$ARGUMENTS`
 
 You are running the Stock Analyzer pipeline in this project folder. All commands are run from the project root with relative paths, exactly as written below (they are pre-approved in `.claude/settings.json`). Never place, modify or cancel any order with any broker tool. This is research only.
 
+**Windows:** wherever this file says `.venv/bin/python`, use `.venv/Scripts/python.exe` instead. Keep the forward slashes; that form works in both PowerShell and Git Bash and matches the pre-approved rules.
+
 ## 1. Pick the stocks
 
 Work out the arguments for `list_stocks.py` from `$ARGUMENTS`:

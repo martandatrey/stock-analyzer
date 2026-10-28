@@ -14,12 +14,12 @@ from . import config, rating
 from .runfolder import RunFolder
 
 RUNNER = config.ROOT / "scripts" / "ta_runner.py"
-TA_PYTHON = config.ROOT / ".venv-ta" / "bin" / "python"
+TA_PYTHON = config.venv_python(".venv-ta")
 
 
 def available() -> tuple[bool, str]:
     if not TA_PYTHON.exists():
-        return False, "TradingAgents is not installed (run ./setup.sh without --no-tradingagents)"
+        return False, "TradingAgents is not installed (re-run setup without --no-tradingagents / -NoTradingAgents)"
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return False, "ANTHROPIC_API_KEY is not set (add it to .env)"
     return True, ""
@@ -31,7 +31,7 @@ def run(folder: RunFolder, settings: dict, timeout: int = 45 * 60) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     ok, why = available()
     if not ok:
-        (out / "result.json").write_text(json.dumps({"error": why}))
+        (out / "result.json").write_text(json.dumps({"error": why}), encoding="utf-8")
         return load(folder)
     data = folder.data
     cache = config.CACHE_DIR / "tradingagents"
@@ -41,6 +41,7 @@ def run(folder: RunFolder, settings: dict, timeout: int = 45 * 60) -> dict:
         "TRADINGAGENTS_CACHE_DIR": str(cache / "cache"),
         "TRADINGAGENTS_MEMORY_LOG_PATH": str(cache / "memory" / "trading_memory.md"),
         "TRADINGAGENTS_NO_UPDATE_CHECK": "1",
+        "PYTHONUTF8": "1",
     }
     cmd = [str(TA_PYTHON), str(RUNNER), "--symbol", data["symbol"], "--date", data["data_as_of"], "--out", str(out),
            "--quick-model", str(settings.get("TradingAgents Quick Model", "claude-sonnet-5-5")),
@@ -48,9 +49,9 @@ def run(folder: RunFolder, settings: dict, timeout: int = 45 * 60) -> dict:
     try:
         subprocess.run(cmd, env=env, cwd=config.ROOT, timeout=timeout, capture_output=True, text=True)
     except subprocess.TimeoutExpired:
-        (out / "result.json").write_text(json.dumps({"error": f"timed out after {timeout // 60} minutes"}))
+        (out / "result.json").write_text(json.dumps({"error": f"timed out after {timeout // 60} minutes"}), encoding="utf-8")
     if not (out / "result.json").exists():
-        (out / "result.json").write_text(json.dumps({"error": "TradingAgents exited without a result"}))
+        (out / "result.json").write_text(json.dumps({"error": "TradingAgents exited without a result"}), encoding="utf-8")
     return load(folder)
 
 
@@ -59,7 +60,7 @@ def load(folder: RunFolder) -> dict | None:
     path = folder.dir / "tradingagents" / "result.json"
     if not path.exists():
         return None
-    res = json.loads(path.read_text())
+    res = json.loads(path.read_text(encoding="utf-8"))
     if res.get("error"):
         return {"rating": "Error", "error": res["error"]}
     theirs = rating.normalize(res.get("rating")) or rating.extract_rating(res.get("decision", ""))
