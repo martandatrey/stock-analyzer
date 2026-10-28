@@ -337,6 +337,8 @@ tests/                       pytest suite
 
 This folder is a git repository designed to be shared. Personal files are git-ignored: `stocks.xlsx`, `reports/`, `.env`, `.venv*`, `vendor/`, `.cache/` and `.claude/settings.local.json`.
 
+**Easiest way to share:** send them the one-paste setup prompt in [docs/share-prompt.md](docs/share-prompt.md). They paste it into Claude Code, and Claude installs this exact project for them on macOS, Linux or Windows.
+
 **What others get:** all the code, the prompts, the Claude Code command, agents and hook, the workbook template and this README.
 
 **What each person sets up themselves:** their own stocks, API key, connectors (FMP, Kite) and scheduled tasks. These are per person and never travel with the repo.
